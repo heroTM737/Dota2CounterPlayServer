@@ -1,0 +1,88 @@
+var fs = require('fs');
+var express = require('express');
+var app = express();
+var http = require('http').Server(app);
+var bodyParser = require('body-parser');
+var db = require('./database/db');
+var session = require('express-session');
+var constants = require('./constants');
+
+var port = process.env.PORT || 7000;
+var urlencodedParser = bodyParser.urlencoded({ extended: false });
+var jsonParser = bodyParser.json();
+
+//public folder
+app.use('/assets', express.static(__dirname + '/public'));
+
+//session
+app.use(session({
+  secret: 'tientmSecretSession',
+  resave: false,
+  saveUninitialized: true
+}))
+
+//home page
+app.get('/', function(req, res) {
+    res.end("Home page");
+});
+
+//authenticate 
+app.get('/login', function(req, res) {
+    fs.readFile(__dirname + "/views/login.html", 'utf8', function (err, data) {
+        if (err) {
+            return console.log(err);
+        }
+        res.end(data);
+    });
+});
+
+
+app.post('/login', urlencodedParser, function(req, res) {
+    var username = req.body.username;
+    var password = req.body.password;
+    
+    console.log(username + " is logging in");
+    db.verifyUser(username, password, function(status) {
+        if (status == constants.status.Successful) {
+            req.session.username = username;
+        }
+        
+        if (req.body.url) {
+            res.redirect(req.body.url);
+        } else {
+            res.end(status);
+        }
+    });
+});
+
+app.post('/logout', function(req, res) {
+     req.session.username = null;
+     res.redirect("/login");
+});
+
+app.get('/user', function(req, res) {
+    var username = req.session.username;
+    res.end(username + " logged in " + constants.status.Successful);
+});
+
+app.get('/heroes', function(req, res) {
+    var heroes_json = fs.readFileSync(__dirname + "/data/heroes.json", 'utf8');
+    var heroes = JSON.parse(heroes_json).heroes;
+
+    var html = "";
+    for (var i = 0; i < heroes.length; i++) {
+        var hero = heroes[i];
+        html += "<div class='heroes-container'><div><img src='/assets/img/kunkka.png' /></div><div>" + hero.name + "</div></div>"
+    }
+
+    var heros_html = fs.readFileSync(__dirname + "/views/heroes.html", 'utf8');
+    html = heros_html.replace("{data}", html)
+    console.log(html);
+    res.end(html);
+
+});
+
+//start server
+http.listen(port, function () {
+  console.log('Server ready at port ' + port);
+});
