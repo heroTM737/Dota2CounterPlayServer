@@ -72,7 +72,7 @@ app.get('/heroes', function(req, res) {
     var html = "";
     for (var i = 0; i < heroes.length; i++) {
         var hero = heroes[i];
-        html += "<div class='heroes-container'><div><img src='/assets/img/kunkka.png' /></div><div>" + hero.name + "</div></div>"
+        html += "<div class='heroes-container'><div><img src='/assets/img/heroes/" + hero.name + ".jpg' /></div><div>" + hero.name + "</div></div>"
     }
 
     var heros_html = fs.readFileSync(__dirname + "/views/heroes.html", 'utf8');
