@@ -76,8 +76,7 @@ app.get('/heroes', function(req, res) {
     }
 
     var heros_html = fs.readFileSync(__dirname + "/views/heroes.html", 'utf8');
-    html = heros_html.replace("{data}", html)
-    console.log(html);
+    html = heros_html.replace("{data}", html);
     res.end(html);
 
 });
