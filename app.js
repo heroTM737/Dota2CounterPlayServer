@@ -1,15 +1,20 @@
 var fs = require('fs');
+
 var express = require('express');
-var app = express();
-var http = require('http').Server(app);
-var bodyParser = require('body-parser');
-var db = require('./database/db');
 var session = require('express-session');
+var bodyParser = require('body-parser');
+var cors = require('cors');
+
+var db = require('./database/db');
 var constants = require('./constants');
 
+var app = express();
+var http = require('http').Server(app);
 var port = process.env.PORT || 7000;
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var jsonParser = bodyParser.json();
+
+var apiController = require('./controller/api/api');
 
 //public folder
 app.use('/assets', express.static(__dirname + '/public'));
@@ -80,6 +85,18 @@ app.get('/heroes', function(req, res) {
     res.end(html);
 
 });
+
+//CORS middleware
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+
+    next();
+}
+app.use(allowCrossDomain);
+
+apiController(app);
 
 //start server
 http.listen(port, function () {
