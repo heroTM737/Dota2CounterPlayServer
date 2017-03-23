@@ -1,7 +1,7 @@
 var fs = require('fs');
 var _ = require('lodash');
 
-var base_url = "http://128.88.242.23:7000";
+var base_url = "http://127.0.0.1:7000";
 
 module.exports = function (app) {
     var heroes_json = fs.readFileSync(__dirname + "/../../data/heroes.json", 'utf8');
