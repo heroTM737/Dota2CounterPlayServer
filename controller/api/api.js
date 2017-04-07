@@ -1,5 +1,6 @@
 var fs = require('fs');
 var _ = require('lodash');
+var TM = require('../../lib/tm_nodejs');
 
 var base_url = "http://127.0.0.1:7000";
 
@@ -21,17 +22,10 @@ module.exports = function (app) {
 
     app.get("/api/counter", function (req, res) {
         var name = req.query.name;
-        var target_index = _.findIndex(data, function (o) { return o.name == name; });
-
-        var counter_list = [];
-        for (var i = 0; i < 3; i++) {
-            var random = Math.round(Math.random() * 113);
-            counter_list.push(data[random]);
-        }
 
         var result = {
-            target: data[target_index],
-            counter_list: counter_list
+            target: _.find(data, function (o) { return o.name == name; }),
+            counter_list: getRandomHeroes(data)
         }
 
         res.end(JSON.stringify(result));
@@ -39,19 +33,41 @@ module.exports = function (app) {
 
     app.get("/api/alies", function (req, res) {
         var name = req.query.name;
-        var target_index = _.findIndex(data, function (o) { return o.name == name; });
-
-        var alies_list = [];
-        for (var i = 0; i < 3; i++) {
-            var random = Math.round(Math.random() * 113);
-            alies_list.push(data[random]);
-        }
 
         var result = {
-            target: data[target_index],
-            alies_list: alies_list
+            target: _.find(data, function (o) { return o.name == name; }),
+            alies_list: getRandomHeroes(data)
         }
 
         res.end(JSON.stringify(result));
     })
+
+    app.get("/api/aliesandcounter", function (req, res) {
+        var name = req.query.name;
+
+        var result = {
+            target: _.find(data, function (o) { return o.name == name; }),
+            alies_list: getRandomHeroes(data),
+            counter_list: getRandomHeroes(data)
+        }
+
+        res.end(JSON.stringify(result));
+    })
+}
+
+function getRandomHeroes(data) {
+    var list = [];
+    var list_2 = [];
+    var random = 0;
+    var size = Math.floor(Math.random() * 10 + 1);
+    for (var i = 0; i < size; i++) {
+        do {
+            random = Math.floor(Math.random() * 113);
+        } while (_.find(list_2, (o) => { return o == random; }));
+
+        list_2.push(random);
+        list.push(data[random]);
+    }
+
+    return list;
 }
