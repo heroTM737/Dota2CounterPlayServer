@@ -9,8 +9,8 @@ function verifyUser(username, password, callback) {
 
         var user = db.collection('user');
 
-        console.log("finding username = " + username);
-        console.log("finding password = " + password);
+        console.log("mlab: finding username = " + username);
+        console.log("mlab: finding password = " + password);
 
         var query = {
             username: username,

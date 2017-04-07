@@ -36,4 +36,22 @@ module.exports = function (app) {
 
         res.end(JSON.stringify(result));
     })
+
+    app.get("/api/alies", function (req, res) {
+        var name = req.query.name;
+        var target_index = _.findIndex(data, function (o) { return o.name == name; });
+
+        var alies_list = [];
+        for (var i = 0; i < 3; i++) {
+            var random = Math.round(Math.random() * 113);
+            alies_list.push(data[random]);
+        }
+
+        var result = {
+            target: data[target_index],
+            alies_list: alies_list
+        }
+
+        res.end(JSON.stringify(result));
+    })
 }
