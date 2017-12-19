@@ -1,0 +1,2 @@
+git clone https://github.com/heroTM737/Dota2CounterPlayServer.git
+git pull origin master
