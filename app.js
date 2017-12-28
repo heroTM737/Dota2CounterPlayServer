@@ -10,7 +10,9 @@ var constants = require('./constants');
 
 var app = express();
 var http = require('http').Server(app);
-var port = process.env.PORT || 7000;
+var config = require('./config/config');
+
+var port = config.port;
 var urlencodedParser = bodyParser.urlencoded({ extended: false });
 var jsonParser = bodyParser.json();
 
