@@ -2,7 +2,10 @@ var fs = require('fs');
 var _ = require('lodash');
 var TM = require('../../lib/tm_nodejs');
 
-var base_url = "http://128.199.190.81:7000";
+var config = require.main.require('./config/config');
+var port = config.port;
+var host = config.ipAddressList[0];
+var base_url = `http://${host}:${port}`;
 
 module.exports = function (app) {
     var heroes_json = fs.readFileSync(__dirname + "/../../data/heroes.json", 'utf8');
@@ -24,7 +27,9 @@ module.exports = function (app) {
         var name = req.query.name;
 
         var result = {
-            target: _.find(data, function (o) { return o.name == name; }),
+            target: _.find(data, function (o) {
+                return o.name == name;
+            }),
             counter_list: getRandomHeroes(data)
         }
 
@@ -35,7 +40,9 @@ module.exports = function (app) {
         var name = req.query.name;
 
         var result = {
-            target: _.find(data, function (o) { return o.name == name; }),
+            target: _.find(data, function (o) {
+                return o.name == name;
+            }),
             alies_list: getRandomHeroes(data)
         }
 
@@ -46,7 +53,9 @@ module.exports = function (app) {
         var name = req.query.name;
 
         var result = {
-            target: _.find(data, function (o) { return o.name == name; }),
+            target: _.find(data, function (o) {
+                return o.name == name;
+            }),
             alies_list: getRandomHeroes(data),
             counter_list: getRandomHeroes(data)
         }
@@ -63,7 +72,9 @@ function getRandomHeroes(data) {
     for (var i = 0; i < size; i++) {
         do {
             random = Math.floor(Math.random() * 113);
-        } while (_.find(list_2, (o) => { return o == random; }));
+        } while (_.find(list_2, (o) => {
+                return o == random;
+            }));
 
         list_2.push(random);
         list.push(data[random]);
